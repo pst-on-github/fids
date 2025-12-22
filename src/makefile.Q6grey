@@ -1,0 +1,104 @@
+# use one of the next CFLAGS lines !		BeNo, 07.06.1994
+#####################################################################
+#
+# stoe, 24.02.98
+#
+# -D_FDRNFS  Set to force unconditional dir reread after command
+#            execution. This is because the current directory doesn't
+#            change time immediately after files are added ore removed.
+#            This was observed on nfs mountet file systems on HP-UX
+#            and QNX.
+#
+# -D_ANSI_COLOR  Sets screen attributes to use 'ansi color attributes'
+#                if $TERM = "*ansi*"
+# -D_ANSI_COLOR_GREY
+#                the same in grey-mode
+#
+# -D_IRSDEL     Immediately refresch the screen when removing files with
+#               the DEL key.
+#
+# -D_UATOABORT  Use 'a' to abort instead of 'q'
+#
+# -Dhds         - Load pfkeys file, on ESC r (restore dir) command.
+#               - Turns flow conrtol off. Makes ^S and ^Q available
+#                 for application
+#
+#####################################################################
+
+STRIP   =strip
+LINT    =lint
+
+#####################################################################
+
+# SYSV3		for UNIX System V.3	, typeahead enabled for RS232 lines
+#CFLAGS = -O -DSYSV3 -DVERSION='"SV3"' -DFIDS_TYPEAHEAD -DEXT_GETENV -DHAS_NO_STRERROR
+
+# LINUX 	for LINUX
+#CFLAGS = -O -D_GNU_SOURCE -DLINUX -DVERSION='"LINUX"' -D_FDRNFS -D_IRSDEL
+
+# DEC-UNIX	for DEC UNIX (OSF/1)
+#CFLAGS = -O -DOSF -DVERSION='"DECUX"' -DFILENO -DMAIL_DIR='"/usr/spool/mail"'
+
+# ULTRIX	for DEC Ultrix
+#CFLAGS = -O -DULTRIX -DVERSION='"ULTRIX"' -DFILENO
+
+# HP-UX		for HP
+#CFLAGS = -Ae -O -DHP_UX -DVERSION='"HP_UX"'
+
+# IRIX          for Silicon Graphics (crimson)
+#CFLAGS = -O -signed -DSYSV  -DVERSION='"IRIX"'
+
+# SunOS  	for SunOS 5.8 
+#CFLAGS = -O -DSUNOS -DVERSION='"SUN"' -D_ANSI_COLOR -DFIDS_TYPEAHEAD -DEXT_GETENV -DHAS_NO_STRERROR
+#LIBS = -lnsl
+
+# SCO		for SCO UNIX 8x386
+#CFLAGS = -O -D_IBCS2 -DSCO -DVERSION='"SCO"' -DFIDS_TYPEAHEAD -DMAIL_DIR='"/usr/spool/mail"'
+#LIBS = -lsocket
+
+# QNX4		for QNX 4.2
+#DEFINES= -DQNX4 -DVERSION='"QNX4"' -Dhds \
+#         -D_ANSI_COLOR_GREY -D_FDRNFS -D_IRSDEL -D_UATOABORT
+#CFLAGS = -Os $(DEFINES)
+#LIBS   = 
+#STRIP  = -wstrip
+#LINT   = flint ./QNX4/lint.lnt
+
+# QNX6		for QNX6 (rtp)
+DEFINES= -DQNX6 -DVERSION='"QNX6"' -Dhds \
+         -D_ANSI_COLOR_GREY -D_FDRNFS -D_IRSDEL -D_UATOABORT
+CFLAGS = -g $(DEFINES)
+LIBS   = -Bdynamic -lsocket
+LINT   = flint ./QNX4/lint.lnt
+
+#####################################################################
+
+SDGENFN=fidsMkSysDat
+SYSGEN='char GEN_SYS[] = "'`uname -a`'";'
+DATGEN='char GEN_DAT[] = "'`date +%d.%h.%y`'";'
+#UIDGEN='char GEN_UID[] = "'`grep \`logname\` /etc/passwd | cut -d: -f1,5`'";'
+UIDGEN='char GEN_UID[] = "'`grep noeg /etc/passwd | cut -d: -f1,5`'";'
+
+OBJ = fids.o fidsscreen.o fidsreaddir.o fidssort.o fidscmdmode.o \
+	     fidslistfile.o fidssetact.o fidssetblock.o fidssetraw.o \
+	     fidsview.o fidsescape.o fidserror.o fnmatch.o
+
+fids:   $(OBJ)
+	@echo $(SYSGEN) > $(SDGENFN).c
+	@echo $(DATGEN) >> $(SDGENFN).c
+	@echo $(UIDGEN) >> $(SDGENFN).c
+	cc $(CFLAGS) $(OBJ) $(SDGENFN).c $(LIBS) -o $@
+	@rm $(SDGENFN).c f*.o
+	$(STRIP) $@
+
+$(OBJ):  fids.h fidsext.h makefile
+fids.o: fids.hlp
+fnmatch.o: fnmatch.h
+
+install: fids
+	-@mv /usr/local/bin/fids /usr/local/bin/fids.old 2>/dev/null
+	cp fids fren .fids.ex_cmds .fids.pf_keys /usr/local/bin
+
+lint:   *.c
+	$(LINT) $(DEFINES) $? | tee lint.log
+

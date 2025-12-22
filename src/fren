@@ -1,0 +1,221 @@
+#rename fuer files mit filenameDELIMextension		BeNoSoft Ltd. 1990
+#
+#
+MY_NAM=`basename $0`
+CLR=`tput clear`                # ESC Sequenze for clear screen/home
+
+FNC='%'		# Filename identifier
+FEC='+'		# Extension identifier
+DELIM='.'	# Default delimiter
+
+if [ $# -lt 3 ]
+  then
+    echo $CLR
+    echo "usage:        ${MY_NAM} cmd [-options] filenames_old filenames_new"
+    echo
+    echo '              options: -ddelimiter = ~ @ # $ _ , . (default=".")'
+    echo "                       -i[nteractiv]"
+    echo "                       -v[erbose]"
+    echo
+    echo "              cmd           : mv | cp | ln"
+    echo "              filenames_old : *.c *.* ..."
+    echo "              filenames_new : ${FNC}.old / newname.${FEC} ..."
+    echo "              ${FNC} : old name, ${FEC} : old extension"
+    echo
+    echo "example1:     ${MY_NAM} mv *.c ${FNC}.cold"
+    echo
+    echo "                  huhu.c  =>  huhu.cold"
+    echo "                  what.c  =>  what.cold"
+    echo "                   a.b.c  =>  a.b.cold        etc..."
+    echo
+    echo "example2:     ${MY_NAM} cp myprog.* newprog.${FEC}"
+    echo
+    echo "                myprog.c  =>  newprog.c"
+    echo "                myprog.o  =>  newprog.o"
+    echo "             myprog.list  =>  newprog.list    etc..."
+    echo
+    exit
+fi
+#---------------------- is given cmd executable ?
+case $1 in
+    mv) ;;
+    cp) ;;
+    ln) ;;
+     *)
+	echo "${MY_NAM}: can only use cmd: mv | cp | ln"
+	exit ;;
+esac
+cmd=$1
+shift
+
+#---------------------- are options given ?
+inter="n"
+verbose="n"
+for i
+do
+  case $1 in
+   -d*) DELIM=`echo "$1" | cut -c3-`
+	if [ `echo "${DELIM}\c" | wc -c` -eq 1 ]
+	then
+		shift
+		continue
+	else
+		echo "${MY_NAM}: can't use delimiter=$DELIM"
+		exit
+	fi ;;
+   -i*) inter="y"
+	shift
+	continue ;;
+   -v*) verbose="y"
+	shift
+	continue ;;
+  esac
+done
+
+#---------------------- get all old filenames and filename_new=last argument
+if [ $# -lt 2 ]
+then
+	echo "${MY_NAM}: no filenames given"
+	exit
+fi
+n=$#
+old_files=""
+while [ $n -gt 1 ]
+do
+	old_files="$old_files $1"
+	n=`expr $n - 1`
+	shift
+done
+fname_new=$1
+
+#---------------------- investigate filename_new
+case $fname_new in
+    *${FNC}${DELIM}${FEC}*)	new="b" ;;
+    *${FNC}${FEC}*)		new="b" ;;
+    *${FNC}*)			new="n" ;;
+    *${FEC}*)			new="e" ;;
+    *)				new="-" ;;
+esac
+new_le=""
+new_ri=""
+if [ $new = "b" -o $new = "n" ]
+then
+    if [ `echo "${fname_new}" | cut -c1` != ${FNC} ]
+    then	# there is something left of the FNC
+	set `echo "${fname_new}" | tr "$FNC" " "`
+	new_le=$1
+    fi
+fi
+if [ $new = "e" ]
+then
+    if [ `echo "${fname_new}" | cut -c1` != ${FEC} ]
+    then	# there is something left of the FEC
+	set `echo "${fname_new}" | tr "$FEC" " "`
+	new_le=$1
+    fi
+fi
+if [ $new = "n" ]
+then
+    len=`echo "${fname_new}\c" | wc -c`
+    len=`expr $len + 0`
+    if [ $len -gt 1 -a `echo "${fname_new}" | cut -c$len` != ${FNC} ]
+    then	# there is something right of the FNC
+	set `echo "${fname_new}" | tr "$FNC" " "`
+	if [ $# -eq 2 ]
+	then
+	    new_ri=$2
+	else
+	    new_ri=$1
+	fi
+    fi
+fi
+if [ $new = "b" -o $new = "e" ]
+then
+    len=`echo "${fname_new}\c" | wc -c`
+    if [ $len -gt 1 -a `echo "${fname_new}" | cut -c$len` != ${FEC} ]
+    then	# there is something right of the FEC
+	set `echo "${fname_new} | tr "$FEC" " "`
+	if [ $# -eq 2 ]
+	then
+	    new_ri=$2
+	else
+	    new_ri=$1
+	fi
+    fi
+fi
+
+#---------------------- do the loop for all given old files
+for i in $old_files
+do
+    if [ ! -r $i -a ! -h $i ]
+    then
+	if [ "$verbose" = "y" ]
+	then
+	    echo "${MY_NAM}:" \"$i\" : No such file or directory
+	fi
+	continue
+    fi
+    f_nam=`basename $i`
+    d_nam=`dirname $i`
+    if [ x${d_nam} = "x." ]
+    then
+      d_nam=""
+    fi
+    if [ x${d_nam} != "x" ]
+    then				# called with a directory name
+      d_nam="${d_nam}/"
+    fi
+
+#---------------------- separate the given old filename in name and extension
+    set `echo "${f_nam}" | tr "$DELIM" " "`
+    f_nam=$1
+    shift
+    n=$#
+    while [ $n -gt 1 ]		# search the rightmost delimiter character
+      do
+	f_nam=$f_nam$DELIM$1
+	n=`expr $n - 1`
+	shift
+      done
+    f_ext=$1
+
+#---------------------- do the command for each given filename
+#---------------------- und substitute the old name or extension if wanted
+    case $new in
+     b) exe="${d_nam}${new_le}${f_nam}${DELIM}${f_ext}${new_ri}" ;;
+     n) exe="${d_nam}${new_le}${f_nam}${new_ri}" ;;
+     e) exe="${d_nam}${new_le}${f_ext}${new_ri}" ;;
+     *) exe="${d_nam}${fname_new}" ;;
+    esac
+    if [ "$i" = "$exe" ]
+    then
+	if [ "$verbose" = "y" ]
+	then
+	    echo "${MY_NAM} Error: Source and destination are equal : \"$i\""
+	fi
+	continue
+    fi	
+    exe="$cmd $i $exe"
+
+    answer="y"
+    if [ "$inter" = "y" ]
+    then
+	echo "$exe  [ no = n<cr> ] : \c"
+	read answer
+	if [ ! "$answer" ]
+	then
+	     answer="y"
+	fi
+    fi
+
+    if [ "$answer" = "y" ]
+    then
+	if [ "$verbose" = "y" ]
+	then
+	    echo "Execute: '$exe'"
+	fi
+	$exe
+    fi
+done
+
+exit

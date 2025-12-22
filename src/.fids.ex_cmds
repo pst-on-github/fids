@@ -1,0 +1,127 @@
+#!/bin/sh
+# 1.arg : filename to be executed
+
+# Function : ask befor executing
+ask_exec()
+{
+  case `uname -s` in
+    Linux ) _Echo="echo -e";;
+    * ) _Echo="echo";;
+  esac
+  ${_Echo} "`basename $0` : Executing '$1' ? [y] \c"
+  read answer
+  case "$answer" in
+    "" | "y" | "Y" )
+      $1
+      ;;
+    * )
+      ;;
+  esac
+}
+
+if [ $# -lt 1 ]; then
+  exit 0
+fi
+# 1. check if 1.Arg is a directory
+if [ -d $1 ]; then
+  exit 1
+fi
+# 1. check if 1.Arg is a regular file
+if [ ! -f $1 ]; then
+  echo $1 is not a regular file
+  exit 2
+fi
+
+case $1 in
+
+  *.a )                 echo "`basename $0` : ar -t $*"
+                        ar -t $*
+                        exit
+                        ;;
+  *.c )                 ask_exec "cc -c $*"
+                        exit
+                        ;;
+  *.o )                 echo "`basename $0` : nm $*"
+                        nm $*
+                        exit
+                        ;;
+  *.exe )               ask_exec "$*"
+                        exit
+                        ;;
+  *.sh )                ask_exec "/bin/sh $*"
+                        exit
+                        ;;
+  Imakefile )           ask_exec "xmkmf"
+                        exit
+                        ;;
+  Makefile )            ask_exec "make -f Makefile"
+                        exit
+                        ;;
+  makefile )            ask_exec "make"
+                        exit
+                        ;;
+  *.gif  | *.jpg )      echo "`basename $0` : xv $*"
+                        xv $*
+                        exit
+                        ;;
+  *.mpg )               echo "`basename $0` : xv $*"
+                        xv $*
+                        exit
+                        ;;
+  *.html | *.htm  )     echo "`basename $0` : netscape $*"
+                        netscape $*
+                        exit
+                        ;;
+  *.ps )                echo "`basename $0` : gostview $*"
+                        gs $*
+                        exit
+                        ;;
+  *.pdf )               echo "`basename $0` : acroread $*"
+                        acroread $*
+                        exit
+                        ;;
+  *.cpio )              echo "`basename $0` : cpio -ivtB -I$1"
+                        cpio -ivtB -I$1
+                        exit
+                        ;;
+  *.tar )               echo "`basename $0` : tar tvf $1"
+                        tar tvf $1
+                        exit
+                        ;;
+  *.gz )                ask_exec "gunzip $1"
+                        exit
+                        ;;
+  *.tgz )               ask_exec "gunzip $1"
+                        exit
+                        ;;
+  *.Z )                 ask_exec "uncompress $*"
+                        uncompress $*
+                        exit
+                        ;;
+  *.txt | *.doc )       echo "`basename $0` : mbedit $*"
+                        mbedit $*
+                        exit
+                        ;;
+  *.wav )               echo "`basename $0` : xrplay $*"
+                        xrplay $*
+                        exit
+                        ;;
+  *.xwd )               echo "`basename $0` : xwud -in $*"
+                        xwud -in $*
+                        exit
+                        ;;
+  *.xbm )               echo "`basename $0` : bitmap $*"
+                        bitmap $*
+                        exit
+                        ;;
+  *.xpm )               echo "`basename $0` : xv $*"
+                        xv $*
+                        exit
+                        ;;
+esac
+if [ -x $1 ]; then
+  ask_exec "$*"
+else
+  echo "`basename $0` : mbedit $*"
+  mbedit $*
+fi

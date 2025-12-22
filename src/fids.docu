@@ -1,0 +1,516 @@
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 1 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /*       Fullscreen Interactive Directory Shell for UNIX V.2            */
+    /*       ===================================================            */
+    /*                                                                      */
+    /************************************************************************/
+
+    OPTIONS:                see 'fids -?'
+
+    TERMINALs supported:    vt100,  ansi
+
+
+    FILES:  fids            executable   
+                                         
+                                         
+            fids.docu       this documentation file
+            .fids.pf_keys   file for user defined PF_Key's
+
+    ENVIRONMENT VARIABLES:
+
+            TERM            defines the terminal type (vt100,ansi)
+            HOME            defines the default directory for 'cd'
+            PATH            defines the command search path
+            PS1             defines the primary promt string
+                            (modified for subsequent shell commands)
+
+    DESCRIPTION:
+
+            FIDS is a full screen command interpreter with one
+            or two directories on the screen.
+
+            The names of the files in a directory are displayed
+            in a sorted order: first the subdirs are listed with
+            a leading reverse displayed 'd' and then the other files
+            in a selectable order.
+            The reverse displayed filename is the current selected
+            file and the user may select any other file by use of
+            the cursor keys.
+            In the lower right window on the screen the actual
+            file parameters are displayed.
+            In the upper right window some system informations are
+            displayed.
+
+            After the start of FIDS the user is in the DISPLAY_mode:
+
+            - the screen shows the current work directory:
+            - the files sorted in alphabetic order
+            - the actual screen position is the subdir ".."
+
+            With the <CR> command on a file position , the ^J cmd ,
+            the ^N cmd or any alphanumeric character or number the
+            FIDS goes in the COMMAND_MODE:
+
+            - the bottom line on the screen is now the Command line
+            - the user may type commands , retrieve previously typed
+              commands and edit the command line
+            - any UNIX command can be executed including "sh" and
+              subsequent commands like fids again!
+
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 2 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /* Commands in the DISPLAY mode:                              '^'=CTRL  */
+    /*                                                                      */
+    /************************************************************************/
+
+
+    Command         Function                Description
+    --------------- ----------------------- ----------------------------------
+
+    ^C              exit                    Exit fids and go back to UNIX
+    exit<CR>
+
+
+    <CR>            chdir/cmd_mode          If current position is a directory,
+                                            then change actual directory to
+                                            this directory, else
+                                            go to the command_edit_mode.
+                                            If the current position is file "."
+                                            the screen will be refreshed.
+
+    ^J              retrieve last command   Go to the command_mode and get
+    ^K                                      the last user typed command in
+                                            the command_line.
+
+    ?               show fids helppages     There are some helppages online
+    <ESC>h
+
+
+    &               split screen            Split the screen vertical and
+                                            show 2 directories on screen.
+                                            First the current directory
+                                            are on both sides.
+                                            The actual directory is that,
+                                            where the actual position is
+                                            reverse displayed.
+                                            If there are 2 directories on
+                                            the screen then screen is
+                                            unsplitted with the actual
+                                            directory.
+
+    <TAB>           switch_side             Switch the actual position to the
+                                            opposite side on screen, if screen
+                                            is in the split screen mode.
+
+    ^W              view or browse file     The file on the actual screen
+                                            position will be displayed.
+                                            The user can change here from
+                                            'ascii' to 'hex'-mode.
+
+    ^E              call editor             The editor 'e' is called with
+                                            the file on the actual screen
+                                            position.
+
+    ^Z              execute                 The file on the actual screen
+                                            position will be executed as
+                                            an executable file.
+                                            If the actual file is a directory
+                                            the chdir cmd is executed.
+
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 3 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /* Commands in the DISPLAY mode:                              '^'=CTRL  */
+    /*                                                                      */
+    /************************************************************************/
+
+
+    Command         Function                Description
+    --------------- ----------------------- ----------------------------------
+
+    ^               page up                 Move the screen one page up
+            
+
+    ^               page down               Move the screen one page down
+            
+
+    ^F              first position          Move the actual position to the
+                                            file ".."
+
+    ^L              last position           Move the actual position to the
+                                            last file of the directory
+
+    ^T              sort filelisting        One line with the allowed sort_modes
+                                            and the actual sort_mode will be
+                    (modes: n=name,t=typ,   displayed and the character for the
+                            s=size,         new sort_mode is then asked.
+                            u=uid,g=gid,    (The subdir's are always sorted by
+                      a=acc,m=mod,c=chan)    their names !)
+
+    <Space>         mark the actual file    If the file on the actual screen
+                                            position is not a directory,
+                                            the filename is marked with a
+                                            leading '@' on the screen.
+                                            If the file was marked before,
+                                            it will be unmarked.
+    ^U              unmark all marked files
+
+
+    ^D              DELETE  file(s)         The file on the actual screen
+                                            position may be removed.
+                                            The user will be asked again
+                                            if he want to remove the file.
+                                            If the actual file is marked all
+                                            the marked files may be removed.
+
+    ^N              file_name to cmd_line   Copy the filename on the actual
+                                            screen position in the cmd_line
+                                            and go to the cmd_mode.
+                                            If the actual file is marked
+                                            all marked filesnames are copied
+                                            in the command line.
+
+    ^P              copy the actual file    same as you type:  cp^N^U
+             
+
+    ^O              move the actual file    same as you type:  mv^N^U
+              
+
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 4 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /* Commands in the DISPLAY mode:                              '^'=CTRL  */
+    /*                                                                      */
+    /************************************************************************/
+
+
+    Command         Function                Description
+    --------------- ----------------------- ----------------------------------
+
+    <ESC>?          escape commands         ? means exact one character:
+                                            If ? is not one of the characters
+                                            below ( or time after ESC > 1sec )
+                                            a line with the allowed characters
+                                            will be displayed and then the
+                                            wanted character can be reentered.
+
+                                            If ? is an allowed character the
+                                            corresponding function will be
+                                            executed immediately !
+
+                    ? = 1...9 PF_Keys       Execute user programmable function
+                                            as loaded from the PF_file.
+
+
+                    ? = h : show help_page
+              
+
+                    ? = l : load            Load the PF_key definitions
+                                            from file ".fids.pf_keys".
+                                            This file will be searched first
+                                            in the current directory , then
+                                            in the home directory and then
+                                            along the "PATH".
+
+                    ? = s : save            Save the current directory name
+
+
+                    ? = r : reset           Reset the previously saved
+                                            directory.
+                                            ( default saved directory is
+                                              the start directory ! )
+
+                    ? = n : change name     The UNIX cmd 'mv' with the actual
+                                            filename is set in the command line
+                                            for editing and execution.
+
+                    ? = u : change uid      The UNIX cmd 'chown' with the actual
+                                            file_uid is set in the command line
+                                            for editing and execution.
+
+                    ? = g : change gid      The UNIX cmd 'chgrp' with the actual
+                                            file_grp is set in the command line
+                                            for editing and execution.
+
+                    ? = m : change mode     The UNIX cmd 'chmod' with the actual
+                                            filemode is set in the command line
+                                            for editing and execution.
+
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 5 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /* Commands in the COMMAND mode:                              '^'=CTRL  */
+    /*                                                                      */
+    /************************************************************************/
+
+
+    Command         Function                Description
+    --------------- ----------------------- ----------------------------------
+
+    ^C              exit                    Exit the command mode and
+                                            go back to the display mode
+
+    <CR>            execute command line    The command typed in the cmd_line
+                                            will be executed and after return
+                                            fids is back in display mode.
+
+    ^J              retrieve last command   Get the previously entered command
+                                            in the command line
+
+    @               use each marked file    The char ' @ ' in the command line
+                                            will be replaced by one marked file
+                                            in the current directory.
+                                            The command is executed for all
+                                            marked files one after another.
+
+                            example:        cp @ $HOME/bin<CR>
+                                            The command cp "name" $HOME/bin
+                                            will be executed for each marked
+                                            file in the actual directory.
+
+    ^N              insert filename(s)      Insert the filename on the actual
+                                            screen position in the cmd_line.
+                                            If the actual file is marked
+                                            all marked filesnames are inserted
+                                            in the cmd_line up to the length
+                                            of the cmd_line.
+
+    ^L              insert dir_left         Insert the name of the directory
+                                            on the left side on screen in the
+                                            cmd_line.
+
+    ^R              insert dir_right        Insert the name of the directory
+                                            on the right side on screen in the
+                                            cmd_line if screen is in the
+                                            split screen mode.
+
+    ^W              insert working dir      Insert the name of the current
+                                            working directory in the cmd_line.
+
+    ^U              insert not working dir  Insert the name of the directory
+                                            that is not the current work dir.
+
+    ^P              copy the actual file    same as you type:  cp^N^U
+            
+
+    ^O              move the actual file    same as you type:  mv^N^U
+               
+
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 6 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /* Commands in the COMMAND mode:                              '^'=CTRL  */
+    /*                                                                      */
+    /************************************************************************/
+
+
+    Command         Function                Description
+    --------------- ----------------------- ----------------------------------
+
+
+    ^B              move to begin of line   Move the cursor to the first
+                                            character in the command line.
+
+
+
+    ^E              move to end of line     Move the cursor behind the last
+                                            character in the command line.
+
+
+
+    <TAB>           move end/begin of line  Move the cursor to the end of line
+                                            if the current position is not eol,
+                                            else move cursor to begin of line.
+
+
+
+    <CURSOR up>     insert a blank          Insert a blank in the command line
+                                            at the current position of cursor.
+
+
+    <CURSOR down>   delete character        Delete the character in cmd_line
+                                            at the current position of cursor.
+
+
+    ^H              delete character left   Delete the character left of
+    <BS>                                    the cursor in the command line.
+    <DEL>
+
+
+
+    ^D              delete to end of line   Delete all charcaters in cmd_line
+                                            from the current cursor position
+                                            to the end of cmd_line.
+
+
+    ^X              delete command line     Delete all charcaters in the
+                                            command line.
+
+
+    <ESC>h          show next helppage      There are some helppages online.
+
+
+
+
+    /************************************************************************/
+
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 7 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /* Intern Commands       ( entered in the command line )                */
+    /*                                                                      */
+    /************************************************************************/
+
+    Fids intern commands:
+
+            cd      If cd is given without an argument,
+                    the environment variable HOME is taken
+                    for the chdir command.
+
+            cd $HOME...
+                    If the argument include the "$HOME"
+                    it will be replaced with the environment
+                    variable.
+
+            exit    like the ^C command
+                    ( try it, if the ^C does'nt work !?)
+
+            fids_alarm
+                    Set time interval in seconds!
+                    ( default = 59 ).
+
+                    If you do nothing on your terminal,
+                    fids does something once after that
+                    interval:
+                    It updates the time of day on screen,
+                    it also reads the directory new, if
+                    this has been changed in the last
+                    interval and it will notify you, if
+                    there is a mail for you.
+
+                    Normaly you don't have to change this
+                    interval time.
+
+
+    Fids intern UNIX commands:
+
+            For description of these commands you
+            should read the UNIX books.
+
+            cp      rm      chown   pwd     mail    umask
+            ln      rmdir   chgrp   id      mesg    touch
+            mv      mkdir   chmod   date    uname
+
+            These commands are executed without leaving
+            fids, if no options given.
+
+            All other commands are executed by calling
+            the shell.
+
+    Shell   If you enter the command "sh", you can work
+            direct with the shell.
+            The Environment variable PS1 (primary promt)
+            is modified by fids to [fids].(old PS1).
+            So you know how often you have called the
+            fids subsequently.
+
+
+
+
+
+    /************************************************************************/
+    /*                                              B.Noeggerath,           */
+    /* fids.docu                page 8 of 8         Rel. 2.9     05.01.1990 */
+    /*                                                                      */
+    /* file ".fids.pf_keys"         User definitions for PF_keys            */
+    /*                                                                      */
+    /************************************************************************/
+
+
+    /* === PF_KEYS FOR FIDS ===    (don't change the first 4 char in each line! */
+    /* functions for pf_keys 1 to 9          ^M= <CR>, ^[= <ESC>, ^T= <CTRL><T> */
+    .C1=cd^M^[l
+    .C2=^W
+    .C3=^C
+    .C4=^A
+    .C5=&^[l
+    .C6=^Y
+    .C7=cd .^M^[l
+    .C8=^Tn
+    .C9=^Tm
+    /* Names of the functions for display in helpline     (max.8 are displayed) */
+    .L1=  HOME
+    .L2= BROWSE
+    .L3=  EXIT
+    .L4=  EDIT
+    .L5=<split>
+    .L6= REMOVE
+    .L7=REFRESH
+    .L8= sort/n
+    .L9= sort/m
+    /************************************************************************/
+
+
+    .Cn=            Command to be executed for the corresponding PF_key.
+      (n=1..9)      All allowed fids commands may be used.
+
+        example:    cd $HOME/c^M^[l^Tt
+
+                    The actual directory is changed to $HOME/c.
+                    ^M  = <CR>      : the execute command (page 5)
+
+                    The file ".fids.pf_keys" will be searched and
+                    if found, PF_key definitions are reloaded.
+                    ^[l = <ESC>l    : the load command (page 4)
+
+                    At least the files in that directory are sorted.
+                    ^Tt             : the sort command (page 3).
+
+            The commands are executed in the same way as if they were typed
+            on the keyboard.
+
+            PF_keys 1..9 on a standard terminal : <ESC>1..9.
+
+
+    .Ln=            Labels for the corresponding PF_keys to be displayed
+      (n=1..9)      on screen.
+
+
+    /************************************************************************/

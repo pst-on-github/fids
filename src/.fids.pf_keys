@@ -1,0 +1,43 @@
+# === PF_KEYS FOR FIDS ===    (don't change the first 4 char in each line!
+# functions for pf_keys 1 to 9          ^M= <CR>, ^[= <ESC>, ^T= <CTRL><T>
+.C1=^[?
+.C2=cd .^M^[l				# cd . = refresh the screen
+.C3=^[Q					# ECS Q = 'quit'
+.C4=mbedit ^[^N^Mx			# the x is the answer for 'Hit...'
+.C5=mbedit ^[^N ^[^U/^[^V		# actual + filename from other side
+.C6=cd $WORK_DIR^M^M                    # cd to env.variable WORK_DIR
+.C7=mv ^[^G "`echo ^[^G | tr [A-Z] [a-z]`"	# rename filename to lowercase
+.C8=mv ^[^G "`echo ^[^G | tr [a-z] [A-Z]`"	# rename filename to uppercase
+.C9=&^[l				# split && load the actual pf_keys
+# Names of the functions for display in helpline     (max.8 are displayed)
+.L1=  HELP
+.L2= REFRESH
+.L3=  EXIT
+.L4= mbedit
+.L5= mbedit2
+.L6=$WRK_DIR
+.L7= ren2Lc
+.L8= ren2Uc
+.L9=<split>
+
+# User defined Ctrl Keys
+.^A=mbedit ^[^N ^[^U/^[^V
+.^B=^[<
+.^E=mbedit ^[^N^Mx
+.^F=find . -name "*.[ch]*" -exec grep "" {} /dev/null \;^[-^[-^[-^[-^[[C
+.^G=fids_tag grep -l "" *.[ch]* /dev/null^[-^[-^[-^[[C
+.^O=mv ^[^G ^[^U
+.^P=cp -rpd ^[^G ^[^U
+.^R=fren mv "-d." " @ " "+.+"
+.^X=^M.fids.ex_cmds ^[^N^M
+.^Y=^[X
+
+# .^@ :	Will be executed after the loading of this file.
+#	May be used to set user display startup options.
+.^@=^[St
+
+# User defined Ctrl Keys for the 'command line edit mode'
+#_^^=^[P                                 # for <CursorUp> : get previous command
+#_^\=^[N                                 # for <CursorDown> : get last command
+#_^_=^[R                                 # if <DEL> should delete char. under cursor
+#

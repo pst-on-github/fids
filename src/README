@@ -1,0 +1,28 @@
+#       Dieses sind die Sourcen fuer FIDS.
+#       ==================================
+#       Eine cursor_gesteuerte directory_shell fuer vt100 und ansi
+#       Terminals unter UNIX.  
+#
+#       ( Die Idee entstand um 1983 mit der Benutzung von "flist"
+#         auf einer "8890" und die erste Implementation habe ich in
+#         8080 Assembler fuer eine noch aeltere selbstgebaute CP/M Kiste
+#         durchgefuehrt!
+#         Django {W.F.Schroeder} hatte damals die "Master"-CP/M Kiste
+#         und hat dann spaeter eine Implementierung und jede Menge
+#         Erweiterungen unter MS-DOS durchgefuehrt, woraus dann der "filer"
+#         entstanden ist.
+#         In meiner Unix-Jugend Zeit habe ich dann versucht, die ganzen
+#         Ideen unter Unix zu realisieren und so sehen die sourcen auch
+#         aus. Aber das ganze Zeug laueft immer noch mit viel Erfolg !  )
+#
+#       viel Spass,     BeNo
+#
+#       p.s.    Wenn jemand an den CP/M-Sourcen interessiert ist,
+#               die habe ich immer noch !!! :-)
+#
+#   ----------------------------------------------------------------------
+#   Ich danke allen fuer die Erweiterungen, Portierungen, Bereinigungen
+#   und die vielen Jahre gemeinsamer Zusammenarbeit.
+#   Besonderer Dank an MB, HDS und PST.
+#   ----------------------------------------------------------------------
+#
