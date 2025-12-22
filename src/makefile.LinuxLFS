@@ -76,7 +76,7 @@ CFLAGS = -O -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -DLINUX -DVERSION='"LINUX"' -D_
 SDGENFN=fidsMkSysDat
 SYSGEN='char GEN_SYS[] = "'`uname -a`'";'
 DATGEN='char GEN_DAT[] = "'`date +%d.%h.%y`'";'
-UIDGEN='char GEN_UID[] = "'`grep \`logname\` /etc/passwd | cut -d: -f1,5`'";'
+UIDGEN='char GEN_UID[] = "'`getent passwd \`id -un\` | cut -d: -f1,5`'";'
 
 OBJ = fids.o fidsscreen.o fidsreaddir.o fidssort.o fidscmdmode.o \
 	     fidslistfile.o fidssetact.o fidssetblock.o fidssetraw.o \
