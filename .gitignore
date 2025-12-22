@@ -1,0 +1,48 @@
+# C/C++ build artifacts
+*.o
+*.obj
+*.d
+*.a
+*.so
+*.dll
+*.dylib
+*.out
+a.out
+
+# Debug/intermediate
+*.gch
+*.pch
+*.swp
+*.swo
+*.tmp
+*.log
+
+# Coverage
+*.gcno
+*.gcda
+*.gcov
+
+# Binary/program outputs
+src/fids
+
+# Generated sources
+src/fidsMkSysDat.c
+
+# Build directories (common conventions)
+build/
+bin/
+lib/
+
+# Tags
+TAGS
+tags
+
+# CCache
+.ccache/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+
+# Requested ignores
+src/makefile
