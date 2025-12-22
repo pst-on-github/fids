@@ -17,30 +17,29 @@ FIDS is a two-pane, fullscreen directory shell for VT100/ANSI terminals on UNIX-
 Background and credits can be found in the historical note in [src/README](src/README).
 
 ## Build
-Choose a platform-specific makefile from `src/`.
+Use the makefile templates in `src/` and copy the appropriate one to `src/makefile`, then build.
 
-On Linux (with large-file support):
-
-```bash
-cd src
-make -f makefile.LinuxLFS
-```
-
-On Linux (2 GB file size target):
+Examples:
 
 ```bash
 cd src
-make -f makefile.Linux2GB
+# Choose one template and copy to 'makefile'
+cp makefile.LinuxLFS makefile      # Linux with large-file support
+# cp makefile.Linux2GB makefile    # Linux with 2GB file size target
+# cp makefile.Q6 makefile          # QNX6 (rtp), etc.
+
+# Build
+make
 ```
 
-Other platforms have dedicated makefiles and flags inside `src/makefile.*`. The build produces the `fids` binary.
+Other platforms have dedicated templates and flags in `src/makefile.*`. The build produces the `fids` binary.
 
 ### Install
 The provided `install` target copies useful helpers alongside `fids`:
 
 ```bash
 cd src
-make -f makefile.LinuxLFS install
+make install
 ```
 
 This installs to `/usr/local/bin` (overwriting a previous `fids` while saving it as `fids.old`), and includes:
@@ -122,9 +121,10 @@ FIDS was created by BeNo (BeNoSoft), with contributions and ports by many, inclu
 
 ## Quick Start
 ```bash
-# Build on Linux with large-file support
+# Select a template and build
 cd src
-make -f makefile.LinuxLFS
+cp makefile.LinuxLFS makefile   # or another suitable template
+make
 
 # Run
 ./fids
