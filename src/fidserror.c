@@ -5,29 +5,29 @@
 /* Ausgabe von System Error Meldungen                                   */
 /************************************************************************/
 
-#include <errno.h>
 #include "fids.h"
+#include <errno.h>
 
 #ifdef HAS_NO_STRERROR
 
 extern char *sys_errlist[];
-extern int sys_nerr;
-char *strerror( int num )
+extern int   sys_nerr;
+char        *strerror(int num)
 {
-  if( num > 0 && num < sys_nerr )
-    return( sys_errlist[num] );
-  else
-    return( "???" );
+    if (num > 0 && num < sys_nerr)
+        return (sys_errlist[num]);
+    else
+        return ("???");
 }
 
 #endif
 
-void syserr( char *msg )
+void syserr(char *msg)
 {
-  gotoxy( 1, 24 );
+    gotoxy(1, 24);
 
-  fprintf( stderr, "ERROR: %s (%d; %s)", msg, errno, strerror(errno) );
+    fprintf(stderr, "ERROR: %s (%d; %s)", msg, errno, strerror(errno));
 
-  cmd_exit();
-  exit(1);
+    cmd_exit();
+    exit(1);
 }

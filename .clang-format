@@ -1,0 +1,19 @@
+# clang-format configuration for FIDS project
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+# Put opening brace on a new line for functions, classes, control statements
+BreakBeforeBraces: Allman
+AlignArrayOfStructures: Left
+# Indent case labels and their blocks within switch statements
+IndentCaseLabels: true
+IndentCaseBlocks: true
+# Preserve tabular alignment across related lines
+AlignConsecutiveMacros: true
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+# Avoid reordering includes unless requested
+SortIncludes: false
+# Keep long lines as-is to avoid disrupting alignment tables
+ColumnLimit: 0
