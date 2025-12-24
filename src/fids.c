@@ -1697,10 +1697,6 @@ static int cmd_rel(void) /* print copyright and release  */
     printf("\tCopyright : Bernhard Noeggerath (1983-2005)\r\n\n");
     printf("\tBeNoSoft Ltd.\r\n");
     printf("\tDepartment: S\r\n\n");
-    printf("\tBrambuschweg 11\r\n");
-    printf("\t28816 Stuhr - Neukrug, Germany\r\n\n");
-    printf("\tE-mail: Bernhard@Noeggerath.de\r\n");
-    printf("\tTel.:   (+49) 421 - 808456\r\n");
     get_key();
     stat_list = fids_list('?', 'b');
     return (0);
