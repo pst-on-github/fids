@@ -227,10 +227,9 @@ void makescreen()
         }
     }
 
-    gotoxy(TermCols - FrightWinCols, max(TermLines - 13, 7));
-    sprintf(fmtstr, "%%s  %%-%2d.%2ds%%s", FrightWinCols - 2,
-            FrightWinCols - 2);
-    printf(fmtstr, A_TITLE, "actual file:", A_NORMAL);
+        gotoxy(TermCols - FrightWinCols, max(TermLines - 13, 7));
+        sprintf(fmtstr, "%%s  %%-*.*s%%s");
+        printf(fmtstr, A_TITLE, FrightWinCols - 2, FrightWinCols - 2, "actual file:", A_NORMAL);
     gotoxy(TermCols - FrightWinCols, max(TermLines - 12, 8));
     printf("%s>%s", A_TITLE, A_NORMAL);
     gotoxy(TermCols - 1, max(TermLines - 12, 8));
@@ -329,7 +328,7 @@ char where;
     if (GRAF_VT100)
         printf(GRAF_OFF);
 
-    if (line == 2 && where == 'u' && utsbuf.nodename != NULL)
+    if (line == 2 && where == 'u' && utsbuf.nodename[0] != '\0')
     {
         gotoxy(TermCols - FrightWinCols, 2);
         printf("%snode: ", A_TITLE);

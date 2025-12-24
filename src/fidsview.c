@@ -180,7 +180,7 @@ int cmd_view() /* command execution for view     */
                 {
                     if (!typeahead)
                     {
-                        if (*p >= ' ' && *p <= '~' || *p == '\t')
+                        if ((*p >= ' ' && *p <= '~') || *p == '\t')
                             putchar((int)*p);
                         else
                             putchar(SC);
@@ -221,8 +221,7 @@ int cmd_view() /* command execution for view     */
                         {
                             gotoxy(46, 1);
                             printf("(%2d%%)",
-                                   (offset + (long)(p + 1 - buf_beg)) * 100 /
-                                       f_size);
+                                (int)((offset + (long)(p + 1 - buf_beg)) * 100 / f_size));
                         }
                     }
                     fflush(stdout);
@@ -281,7 +280,7 @@ int cmd_view() /* command execution for view     */
                     typeahead = TRUE;
 
                 if (!typeahead)
-                    printf("%06X    ", offset - rest + j * 16);
+                    printf("%06lX    ", offset - rest + j * 16);
 
                 if (!j)
                     gotoxy((rest / 2) + (rest * 2) + 11, 2);
@@ -356,7 +355,7 @@ int cmd_view() /* command execution for view     */
             {
                 gotoxy(46, 1);
                 printf("(%2d%%)",
-                       (offset + (long)(p + 1 - buf_beg)) * 100 / f_size);
+                       (int)((offset + (long)(p + 1 - buf_beg)) * 100 / f_size));
             }
             fflush(stdout);
             typeahead = FALSE;

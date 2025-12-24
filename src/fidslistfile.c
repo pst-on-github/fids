@@ -518,7 +518,19 @@ void printMountInfo(int icols, int max_len)
     if (rwopt != 'w')
     {
         if ((strlen(fmtstr) + 4) <= max_len)
-            sprintf(fmtstr, "%s<r%c>", fmtstr, rwopt);
+        {
+            size_t rem = sizeof(fmtstr) - strlen(fmtstr) - 1; /* remaining capacity */
+            if (rem >= 4)
+            {
+                char tail[5];
+                tail[0] = '<';
+                tail[1] = 'r';
+                tail[2] = rwopt;
+                tail[3] = '>';
+                tail[4] = '\0';
+                strncat(fmtstr, tail, 4);
+            }
+        }
     }
 
     if (i <= max_len) /* fstype was not copied yet */
@@ -526,7 +538,25 @@ void printMountInfo(int icols, int max_len)
         if ((psc == NULL) && p_fstype &&
             ((strlen(fmtstr) + 2 + strlen(p_fstype)) <= max_len))
         {
-            sprintf(fmtstr, "%s(%s)", fmtstr, p_fstype);
+            size_t rem = sizeof(fmtstr) - strlen(fmtstr) - 1; /* remaining capacity */
+            if (rem > 0)
+            {
+                strncat(fmtstr, "(", 1);
+                rem--;
+            }
+
+            if (rem > 0)
+            {
+                size_t n = strlen(p_fstype);
+                size_t copy = (n < rem) ? n : rem;
+                strncat(fmtstr, p_fstype, copy);
+                rem -= copy;
+            }
+
+            if (rem > 0)
+            {
+                strncat(fmtstr, ")", 1);
+            }
         }
     }
 #endif

@@ -532,13 +532,12 @@ static int cmd_m_nam(void) /* get actual file_name(s) in cmdline */
 /************************************************************************/
 static int cmd_m_onam(void) /* get other file_name in cmdline */
 {
-    int i;
-
     if (scrn > 1)
     {
         if (actlr == 'l')
         {
 #ifdef INSERT_OTHER_FILENAME_ALL_MARKED
+            int i;
             if (!p_lsr[actir]->f_inode) /* if inode == 0 */
             {
                 for (i = 0; i < numdr + numfr; i++)
@@ -554,6 +553,7 @@ static int cmd_m_onam(void) /* get other file_name in cmdline */
         else
         {
 #ifdef INSERT_OTHER_FILENAME_ALL_MARKED
+            int i;
             if (!p_lsl[actil]->f_inode) /* if inode == 0 */
             {
                 for (i = 0; i < numdl + numfl; i++)
@@ -1393,7 +1393,7 @@ static int cmd_setal(void) /* set update interval time */
 /* ------------------------------------------------------------------------- */
 static int cmd_comp(void) /* compare 2 directories */
 {
-    int         i, c, rc = 0;
+    int         i, c;
     char       *pp, *dir_other;
     FILE       *fp1, *fp2;
     struct stat stbuf;
@@ -1457,14 +1457,12 @@ static int cmd_comp(void) /* compare 2 directories */
                 if (!(fp1 = fopen(p_ls[i]->f_name, "r")))
                 {
                     error("Error: Can't open file: ", p_ls[i]->f_name);
-                    rc = -1;
                     break;
                 }
                 FidsF1closeOnInterrupt = fp1;
                 if (!(fp2 = fopen(pp, "r")))
                 {
                     error("Error: Can't open file: ", p_ls[i]->f_name);
-                    rc                     = -1;
                     FidsF1closeOnInterrupt = NULL;
                     fclose(fp1);
                     break;
@@ -1619,7 +1617,7 @@ void printfspec()
     strcat(allfspec, exclspec);
     if (strlen(allfspec) > (TermCols - 4))
         allfspec[TermCols - 4] = '\0';
-    gotoxy(TermCols - strlen(allfspec) - 3, TermLines - 1);
+    gotoxy(TermCols - (unsigned)strlen(allfspec) - 3, TermLines - 1);
     printf(" %s ", allfspec);
 }
 

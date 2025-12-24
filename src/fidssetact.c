@@ -96,8 +96,8 @@
 #include <mntent.h>
 #endif
 
-char act_uid[16]; /* actual name of file uid      */
-char act_gid[16]; /* actual name of file gid      */
+char act_uid[16+1]; /* actual name of file uid */
+char act_gid[16+1]; /* actual name of file gid */
 
 char SymLinkName[PATH_MAX + 1];
 void printFileSystemInfo(void);
@@ -322,8 +322,7 @@ char    what;
     }
     if ((p_ls[acti]->f_st.st_mode & S_IFMT) == S_IFLNK)
     {
-        sprintf(fmtstr, "%%s-> %%-%d.%ds%%s", FrightWinCols - 3,
-                FrightWinCols - 3);
+        sprintf(fmtstr, "%%s-> %%-*.*s%%s");
 
         /* was it a symbolic link, then get the destination name */
         if ((numrdl = readlink(p_ls[acti]->f_name, SymLinkName, PATH_MAX)) <
@@ -331,7 +330,7 @@ char    what;
         {
             gotoxy(TermCols - FrightWinCols,
                    max(TermLines - 10, 10)); /* place for byte_count */
-            printf(fmtstr, A_ACTFILEDATA, "  ???", A_NORMAL);
+            printf(fmtstr, A_ACTFILEDATA, FrightWinCols - 3, FrightWinCols - 3, "  ???", A_NORMAL);
             p_ls[acti]->f_st.st_size = -1;
         }
         else
@@ -351,20 +350,20 @@ char    what;
                 {
                     case ENOTDIR:
                     case ENOENT: /* Broken link */
-                        printf(fmtstr, A_FAILURE, "BROKEN LINK", A_NORMAL);
+                        printf(fmtstr, A_FAILURE, FrightWinCols - 3, FrightWinCols - 3, "BROKEN LINK", A_NORMAL);
                         break;
                     case EACCES:
-                        printf(fmtstr, A_FAILURE, "ACCESS ERROR", A_NORMAL);
+                        printf(fmtstr, A_FAILURE, FrightWinCols - 3, FrightWinCols - 3, "ACCESS ERROR", A_NORMAL);
                         break;
 
 #if (ELOOP != ENOENT)           /* for Motorola SysV68 */
                     case ELOOP: /* Too many symbolic links */
-                        printf(fmtstr, A_FAILURE, "LINK LOOP ERROR", A_NORMAL);
+                        printf(fmtstr, A_FAILURE, FrightWinCols - 3, FrightWinCols - 3, "LINK LOOP ERROR", A_NORMAL);
                         break;
 #endif
 
                     default:
-                        printf(fmtstr, A_FAILURE, "LINK ERROR", A_NORMAL);
+                        printf(fmtstr, A_FAILURE, FrightWinCols - 3, FrightWinCols - 3, "LINK ERROR", A_NORMAL);
                         break;
                 }
             }
@@ -535,15 +534,14 @@ char    what;
     else
     {
         char dev_mm[64];
-        sprintf(fmtstr, "dev: %%s%%%d.%ds%%s", FrightWinCols - 5,
-                FrightWinCols - 5);
+        sprintf(fmtstr, "dev: %%s%%*.*s%%s");
 #ifdef major
         /* major is a macro usually in /usr/include/sys/types.h */
         sprintf(dev_mm, "%d,%d", major(p_ls[acti]->f_st.st_rdev),
                 minor(p_ls[acti]->f_st.st_rdev));
 #else
-        sprintf(dev_mm, "%d,%d", (p_ls[acti]->f_st.st_rdev >> 8) & 0xff,
-                p_ls[acti]->f_st.st_rdev & 0xff);
+        sprintf(dev_mm, "%d,%d", (int)(p_ls[acti]->f_st.st_rdev >> 8) & 0xff,
+                (int)(p_ls[acti]->f_st.st_rdev & 0xff));
 #endif
         printf(fmtstr, A_ACTFILEDATA, dev_mm, A_NORMAL);
     }
@@ -663,7 +661,6 @@ void printFileSystemInfo(void)
     float free = 0.;
     int   freepro;
     char  freec;
-    char *psc;
     char  fmtstr[32];
 
 #ifdef QNX4

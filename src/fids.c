@@ -423,7 +423,10 @@ int main(int argc, char *argv[])
     if (argc == 2)
     {
         /* try to take this as a directory name */
-        (void)(chdir(argv[1]));
+        if (chdir(argv[1]) == ERR)
+        {
+            /* Intentionally ignoring result */
+        }
     }
 
     setwinsize(&TermLines, &TermCols);
@@ -476,7 +479,7 @@ int main(int argc, char *argv[])
     /* initialize the attribute string array */
     for (i = 0; i < TERM_ATTR_NUM; i++)
     {
-        c = (int)Term_Attr[0][i];
+        c = (int)(long)Term_Attr[0][i];
         if (c < 0 || c >= TERM_ATTR_STRING_NUM)
             syserr("fids.setupTermAttr");
         Term_Attr[TermGrix][i] = Term_Attr_Str[0][c];
@@ -905,10 +908,10 @@ char  what;
     if (access(".", 04) == ERR)
     {
         save_cursor();
-        chdir(p_cwd); /* go back */
+        if (chdir(p_cwd) == ERR) { /* go back, intentionally ignoring result */ }
         error("can't read directory: ", dir_name);
         restore_cursor();
-        getcwd(p_cwd, NDIR); /* get cwd_nam  */
+        if (getcwd(p_cwd, NDIR) == NULL) { /* get cwd_namk, intentionally ignoring result */ }
         if (cmd_cdu(p_cwd) == ERR)
             cmd_exit();
         if (what != 's')
@@ -1098,7 +1101,7 @@ int swi_act(void) /* switch the actual parameters */
 /************************************************************************/
 static int cmd_split(void) /* split the screen to 2 dir's  */
 {                          /* if 2dirs then unsplit        */
-    int   i, j, l_pwd;
+    int   i, j;
     char *p1, *p2;
 
     if (scrn == 1) /* activ = 'l' if scrn == 1     */
