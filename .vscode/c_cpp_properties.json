@@ -1,0 +1,28 @@
+{
+  "version": 4,
+  "configurations": [
+    {
+      "name": "Linux",
+      "compilerPath": "/usr/bin/cc",
+      "intelliSenseMode": "gcc-x64",
+      "cStandard": "c89",
+      "includePath": [
+        "${workspaceFolder}/src",
+        "/usr/include",
+        "/usr/local/include"
+      ],
+      "defines": [
+        "_GNU_SOURCE",
+        "_FILE_OFFSET_BITS=64",
+        "LINUX",
+        "VERSION=\"LINUX\"",
+        "_FDRNFS",
+        "_IRSDEL"
+      ]
+      
+      /* Optional: if you generate compile_commands.json at workspace root, uncomment:
+      ,"compileCommands": "${workspaceFolder}/compile_commands.json"
+      */
+    }
+  ]
+}
