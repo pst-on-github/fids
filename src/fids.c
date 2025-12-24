@@ -96,10 +96,11 @@
 /* 2.9.85  25.11.03     new united fids sources                         */
 /* 2.9.86  18.05.04     new fids_cmp (don't use sum !)                  */
 /* 2.9.87  12.05.05     filesize > 2GB for Linux 2.4                    */
+/* 2.9.88  24.12.25     Adaptions to modern gcc but still C89 compliant */
 /************************************************************************/
 /*                                                                      */
 
-#define RELEASE "2.9.87"
+#define RELEASE "2.9.88"
 
 #include <pwd.h>
 #include <setjmp.h>

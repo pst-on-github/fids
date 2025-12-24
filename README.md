@@ -2,7 +2,7 @@
 
 FIDS is a two-pane, fullscreen directory shell for VT100/ANSI terminals on UNIX-like systems. It provides fast, keyboard-driven file browsing, tagging, and command execution without leaving the terminal. The project dates back to the early 1980s and has been continually refined and ported across UNIX variants.
 
-> Release: 2.9.87 • Platforms: UNIX, Linux, QNX, SCO, SunOS, ULTRIX, DEC-UNIX • Large-file support available on Linux
+> Release: 2.9.88 • Platforms: UNIX, Linux, QNX, SCO, SunOS, ULTRIX, DEC-UNIX • Large-file support available on Linux
 
 ## Overview
 - Two synchronized directory panels (left/right) with split-screen toggle
